@@ -97,4 +97,5 @@ while True:
 
 webcam.release()
 cv2.destroyAllWindows()
-landmarker.close()  
+landmarker.close()
+
