@@ -5,6 +5,7 @@ import mediapipe as mp
 from mediapipe.tasks import python as mp_python
 from mediapipe.tasks.python import vision as mp_vision
 import time 
+import pygame
 
 base_options = mp_python.BaseOptions(model_asset_path='hand_landmarker.task')
 options = mp_vision.HandLandmarkerOptions(
@@ -27,6 +28,19 @@ HAND_CONNECTIONS = [
     (13, 17), (17, 18), (18, 19), (19, 20), # Pinky finger
     (0, 17)                                 # Palm base
 ]
+sounds_mapping = {
+    1: 'sound_swaras/1_Sa.mp3',
+    2: 'sound_swaras/2_Re.mp3',
+    3: 'sound_swaras/3_Ga.mp3',
+    4: 'sound_swaras/4_Ma.mp3',
+    5: 'sound_swaras/5_Pa.mp3',
+    6: 'sound_swaras/6_Dha.mp3',
+    7: 'sound_swaras/7_Ni.mp3',
+    8: 'sound_swaras/8_Sa_upper.mp3'
+}
+previous = 0
+pygame.mixer.init()
+
 def hand(frame,hand_landmarks):
     h,w,_ = frame.shape
     points = [(int(lm.x*w),int(lm.y * h)) for lm in hand_landmarks]
@@ -70,6 +84,11 @@ while True:
             if hand_landmarks[12].y < hand_landmarks[10].y: count += 1
             if hand_landmarks[16].y < hand_landmarks[14].y: count += 1
             if hand_landmarks[20].y < hand_landmarks[18].y: count += 1
+        if count != previous:
+            if count in sounds_mapping:
+                pygame.mixer.music.load(sounds_mapping[count])
+                pygame.mixer.music.play()
+            previous = count
     cv2.putText(frame, str(count), (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2)
     cv2.imshow('frame',frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
