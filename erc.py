@@ -38,6 +38,16 @@ sounds_mapping = {
     7: 'sound_swaras/7_Ni.mp3',
     8: 'sound_swaras/8_Sa_upper.mp3'
 }
+swara_names = {
+    1: 'Sa',
+    2: 'Re',
+    3: 'Ga',
+    4: 'Ma',
+    5: 'Pa',
+    6: 'Dha',
+    7: 'Ni',
+    8: 'Sa (Upper)'
+}
 previous = 0
 pygame.mixer.init()
 
@@ -89,6 +99,9 @@ while True:
                 pygame.mixer.music.load(sounds_mapping[count])
                 pygame.mixer.music.play()
             previous = count
+            if count in swara_names:
+                print(f"Swara: {swara_names[count]}")
+    cv2.putText(frame, swara_names.get(count, ""), (450,100), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2)
     cv2.putText(frame, str(count), (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2)
     cv2.imshow('frame',frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
